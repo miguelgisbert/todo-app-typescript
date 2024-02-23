@@ -1,40 +1,36 @@
-import { TODO_FILTERS, FILTERS_BUTTONS } from './consts';
+import { FILTERS_BUTTONS } from './consts';
+import { FilterValue } from './types'; 
 
 interface Props {
-    filterSelected: typeof TODO_FILTERS[keyof typeof TODO_FILTERS]
-    onFilterChange: (filter: typeof TODO_FILTERS[keyof typeof TODO_FILTERS]) => void
+    filterSelected: FilterValue
+    onFilterChange: (filter: FilterValue) => void
 }
 
 export const Filters: React.FC<Props> = ({ filterSelected, onFilterChange }) => {
+
     return (
         <ul className="filters">
-            <li>
-                <a 
-                    href="#/"
-                    className={filterSelected === 'all' ? 'selected' : ''}
-                    onClick={() => onFilterChange('all')}
-                >
-                    All
-                </a>
-            </li>
-            <li>
-                <a 
-                    href="#/active"
-                    className={filterSelected === 'active' ? 'selected' : ''}
-                    onClick={() => onFilterChange('active')}
-                >
-                    Active
-                </a>
-            </li>
-            <li>
-                <a 
-                    href="#/completed"
-                    className={filterSelected === 'completed' ? 'selected' : ''}
-                    onClick={() => onFilterChange('completed')}
-                >
-                    Completed
-                </a>
-            </li>
+            {
+                Object.entries(FILTERS_BUTTONS).map(([key, {href, literal}]) => {
+                    const isSelected = key === filterSelected
+                    const className = isSelected ? 'selected' : ''
+                    
+                    return (
+                        <li key={key}>
+                            <a 
+                                href={href}
+                                className={className}
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    onFilterChange(key as FilterValue)
+                                }}
+                            >
+                                {literal}
+                            </a>
+                        </li>
+                    )
+                })
+            }
         </ul>
-    )
+    )       
 }
